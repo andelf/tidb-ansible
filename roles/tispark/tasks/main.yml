@@ -1,0 +1,27 @@
+---
+
+- name: deploy spark-2.1.0
+  unarchive: >
+    creates="{{ deploy_dir }}/spark-{{ spark_version }}-bin-hadoop2.7/sbin/start-master.sh"
+    src={{ downloads_dir }}/spark-{{ spark_version }}-bin-hadoop2.7.tgz dest={{ deploy_dir }}/
+
+- name: rename spark deploy dir
+  shell: >
+    creates="{{ deploy_dir }}/spark-{{ spark_version }}-bin-hadoop2.7/sbin/start-master.sh"
+    mv {{ deploy_dir }}/spark-{{ spark_version }}-bin-hadoop2.7 {{ deploy_dir }}/spark
+
+- name: deploy tispark
+  copy: >
+    src={{ downloads_dir }}/tispark-0.1.0-beta-SNAPSHOT-jar-with-dependencies.jar dest={{ deploy_dir }}/spark/jars/
+
+- name: create spark configuration file[1]
+  template: >
+    src=spark-env.sh.j2 dest={{ deploy_dir }}/spark/conf/spark-env.sh mode=0644
+
+- name: create spark configuration file[2]
+  template: >
+    src=spark-defaults.conf.j2 dest={{ deploy_dir }}/spark/conf/spark-defaults.conf mode=0644
+
+- name: create spark-slave run script
+  template: >
+    src=start-slave.sh.j2 dest={{ deploy_dir }}/spark/sbin/start-slave.sh mode=0755
