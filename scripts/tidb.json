@@ -584,7 +584,7 @@
           "targets": [
             {
               "intervalFactor": 2, 
-              "expr": "rate(tidb_server_query_total[1m])", 
+              "expr": "rate(tidb_server_transaction_total[1m])", 
               "step": 30, 
               "refId": "A", 
               "legendFormat": "{{instance}}-{{job}} {{type}} {{status}}"
